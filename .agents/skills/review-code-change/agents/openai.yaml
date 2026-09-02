@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Code Change"
+  short_description: "Review one code change without applying fixes"
+  default_prompt: "Use $review-code-change to review this local change or pull request and return verified, deduplicated comments without applying fixes."

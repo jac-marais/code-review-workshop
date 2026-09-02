@@ -1,0 +1,16 @@
+# Case-specific reviews, PR storybooks, generated artifacts, clones, and worktrees
+# stay under the ignored repo-local review-work root.
+review-work/
+
+# Legacy delivery records must not enter version control.
+delivery/
+
+# Local harness settings, per machine.
+.claude/settings.local.json
+
+__pycache__/
+.pytest_cache/
+node_modules/
+
+# Local internal sharing helper; not part of the distributable workshop.
+.agents/skills/share-standalone-html/

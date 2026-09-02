@@ -1,0 +1,4 @@
+import {tsImport} from 'tsx/esm/api'
+
+const {main} = await tsImport('./src/build.tsx', import.meta.url)
+await main()

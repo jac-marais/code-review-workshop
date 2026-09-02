@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "workshop": "code-review",
+  "research_cutoff": "2026-07-13",
+  "sources": [
+    {
+      "id": "SRC-001",
+      "title": "Security Lens Review protocol",
+      "owner": "workshop project",
+      "class": "derived review protocol",
+      "date": "2026-07-13",
+      "path": "../.agents/skills/security-lens-review/SKILL.md",
+      "redistribution": "MIT with attributed CC BY 4.0 portions; see ../THIRD_PARTY_NOTICES.md",
+      "locators": [
+        "Orchestrated workbench mode",
+        "The lenses",
+        "Workflow phases 2 through 5",
+        "Attribution"
+      ],
+      "authority": "Direct evidence of the workshop's workflow requirements for isolated security review, verification, deduplication, and changed-line findings.",
+      "limits": "Does not prove the workflow ran successfully, improved defect detection, or generalizes beyond the owner's prior use."
+    },
+    {
+      "id": "SRC-002",
+      "title": "Rules Review protocol",
+      "owner": "workshop project",
+      "class": "owner-authored review protocol",
+      "date": "2026-07-13",
+      "path": "../.agents/skills/review-robust-rules/SKILL.md",
+      "redistribution": "MIT",
+      "locators": [
+        "Orchestrated workbench mode",
+        "Read the rules and run the checklist",
+        "Classify severity",
+        "Important guidelines"
+      ],
+      "authority": "Direct evidence of the workshop's workflow requirements for repository-context robustness review, verification, deduplication, and changed-line findings.",
+      "limits": "Does not prove the workflow ran successfully, establishes all robust-software rules empirically, or measures review quality."
+    }
+  ],
+  "external_source_register": {
+    "path": "../research/ledger/sources/001-sources.md",
+    "first_id": "SRC-003",
+    "last_id": "SRC-058",
+    "count": 56
+  }
+}

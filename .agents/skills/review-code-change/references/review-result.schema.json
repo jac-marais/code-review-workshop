@@ -1,0 +1,283 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "review-result.schema.json",
+  "title": "Code Review Workflow Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "review_status",
+    "delivery_state",
+    "external_posting_authorized",
+    "output_comments",
+    "suppressions",
+    "cleared",
+    "checks",
+    "blocking_limits",
+    "completion_receipts"
+  ],
+  "properties": {
+    "review_status": {
+      "enum": [
+        "complete",
+        "incomplete"
+      ]
+    },
+    "delivery_state": {
+      "enum": [
+        "draft",
+        "posted"
+      ]
+    },
+    "external_posting_authorized": {
+      "type": "boolean"
+    },
+    "output_comments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "issue_id",
+          "priority",
+          "path",
+          "side",
+          "line",
+          "body"
+        ],
+        "properties": {
+          "issue_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "priority": {
+            "enum": [
+              "P0",
+              "P1",
+              "P2",
+              "P3"
+            ]
+          },
+          "pull_request": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "side": {
+            "enum": [
+              "LEFT",
+              "RIGHT"
+            ]
+          },
+          "line": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "suppressions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "issue_id",
+          "path",
+          "side",
+          "line",
+          "existing_thread_id",
+          "reason"
+        ],
+        "properties": {
+          "issue_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pull_request": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "side": {
+            "enum": [
+              "LEFT",
+              "RIGHT"
+            ]
+          },
+          "line": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "existing_thread_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "cleared": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "behavior",
+          "locator",
+          "evidence"
+        ],
+        "properties": {
+          "behavior": {
+            "type": "string",
+            "minLength": 1
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1
+          },
+          "from_candidate": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "blocking_limits": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "completion_receipts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "name",
+          "state"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "changed_file",
+              "workbench"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "enum": [
+              "complete",
+              "incomplete"
+            ]
+          },
+          "limit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "review_status": {
+            "const": "complete"
+          }
+        },
+        "required": [
+          "review_status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "blocking_limits": {
+            "maxItems": 0
+          },
+          "completion_receipts": {
+            "items": {
+              "properties": {
+                "state": {
+                  "const": "complete"
+                }
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "blocking_limits": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "delivery_state": {
+            "const": "posted"
+          }
+        },
+        "required": [
+          "delivery_state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "external_posting_authorized": {
+            "const": true
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "delivery_state": {
+            "const": "draft"
+          }
+        }
+      }
+    }
+  ]
+}

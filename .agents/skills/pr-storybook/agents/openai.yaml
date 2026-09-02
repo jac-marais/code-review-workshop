@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Storybook"
+  short_description: "Turn one large diff into a clear review story"
+  default_prompt: "Use $pr-storybook to create a static PR Storybook for this code change."
