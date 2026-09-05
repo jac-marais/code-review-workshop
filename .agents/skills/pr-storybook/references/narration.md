@@ -144,3 +144,5 @@ Reject the book when any condition is true:
 - A repeated first-person opening makes the story feel like a template.
 - A colon, semicolon, or em dash joins complete ideas.
 - The text does not pass `$write-clear-text` and the whole-book redundancy audit.
+
+Before completion, delegate one narrowly scoped subagent to read every MDX chapter as one book and apply this gate. Its only task is to answer the gate questions and quote exact passages for failures. It must not re-review the code or expand the scope. Allow three review passes in total, which gives the author two opportunities to fix reported problems. If the third pass still reports a problem, record the remaining objection, stop retrying, and proceed.
