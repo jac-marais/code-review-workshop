@@ -1,6 +1,6 @@
 ---
 name: security-lens-review
-description: Run a multi-lens security review of a codebase or code changes using parallel reviewer personas (Cynic, Skeptic, Nyaya, Confucian, Stoic) plus orchestrator synthesis. Use when the user asks for a security lens review, four-lens review, five-lens review, persona-based security review, disposition review, or a deep security audit of an architecture, security surface, PR, or diff that should go beyond a single-pass checklist.
+description: "Run a parallel multi-persona security review with synthesized findings. Use: security lens review; deep security audit; persona-based review."
 ---
 
 # Security Lens Review

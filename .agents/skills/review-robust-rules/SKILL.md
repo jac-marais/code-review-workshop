@@ -1,6 +1,6 @@
 ---
 name: review-robust-rules
-description: Evaluate plans, pull requests, or code diffs against the Rules for Robust Software and return all findings without applying fixes. Use when reviewing code changes, evaluating a plan, auditing a PR, or when the user asks for a robustness review.
+description: "Check plans or diffs against the Rules for Robust Software. Use: robustness review; audit a PR or plan."
 ---
 
 # Review Against Robust Rules
