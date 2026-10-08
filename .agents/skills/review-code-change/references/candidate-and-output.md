@@ -105,3 +105,13 @@ Cleared     from the cleared record, so nobody re-derives it
 ```
 
 Two findings at one priority can need entirely different responses, which is why the grouping is by action. Mark every finding verified or reported, because a reader who cannot tell will either trust an unverified claim or re-check a settled one.
+
+## Tighten Before Return
+
+Run this pass last, after the final recheck and right before returning the response. It applies to every output comment and to the handoff.
+
+1. Split each draft into its claims, one sentence at a time.
+2. Mark each claim that restates another claim in the same draft or in a sibling draft. An explanation followed by an example is usually one claim twice, so keep the example, because it shows the point by itself.
+3. Rewrite each draft so that each claim appears once, stated plainly.
+
+Change only the wording. Keep every trigger, consequence, evidence locator, fix direction, priority, and anchor. If a cut would remove one of them, the claim was not redundant. Keep the claim list privately under `review-work/pr-reviews/<review-id>/` so a reader can audit what was cut.

@@ -48,6 +48,7 @@ Default to output only. Do not create comments or change platform state unless t
 11. Deduplicate by counterfactual defect, first failing state, and minimal complete fix.
 12. Deduplicate against every existing discussion surface.
 13. Draft changed-line output comments, then recheck head, discussions, anchors, receipts, and user-checkout status.
+14. Last, tighten every draft so each claim appears once, as described in [`candidate-and-output.md`](references/candidate-and-output.md#tighten-before-return).
 
 When subagents are available, use separate read-only agents for independent workbenches. Give each the frozen scope facts, the shared facts brief, its cluster's per-lane questions, and no sibling output. When subagents are unavailable, run the workbenches in separate contexts and record the reduced independence as a limit.
 
