@@ -83,17 +83,11 @@ Write:
 
 Comment on code, not the author. Offer an exact patch only when repository evidence supports it. Default to a draft response and create no platform action.
 
-## Findings Report
-
-For optional gist review mode, the lead writes one `findings.md` beside the private result record and returns its contents to the user. Include the frozen base and head, applied protocols, delivery bar, verified findings, checks, cleared behavior, and material limits. Each finding retains its issue ID, priority, path, side, changed line, evidence, trigger, consequence, and smallest complete fix direction. Recheck its anchor against the frozen snapshot. Keep suppressed duplicates in `suppressions`, not in the findings list.
-
-Keep `output_comments` empty and the result in draft state with no external posting authority. Do not add undeclared report fields to the result schema. The result validator checks receipts and status; with no output comments it does not validate the report's anchors or prose. The lead must verify those against raw evidence before claiming completion. This output choice does not reduce coverage or verification requirements.
-
 ## Handoff
 
 Output comments suit a reviewer reading one issue at a time. Someone about to do the work needs one document instead, ordered by what they do next. Produce it as a single fenced block they can copy whole.
 
-Use the user's stated delivery bar, or include all verified, actionable findings by default. Ask only when a narrower bar is needed. State the bar you applied and how many candidates it dropped. Silent filtering reads as completeness.
+Ask for the delivery bar before filtering, because it is the user's call and it changes what belongs. State the bar you applied and how many candidates it dropped. Silent filtering reads as completeness.
 
 ```
 Header      repository, branch, base and head, path convention
@@ -104,17 +98,17 @@ Findings    grouped by what the reader does next, not by severity:
               lands badly in production, so fix or accept knowingly
               resolve before merge, a decision rather than a code change
               cheap insurance, small fixes with real downside if skipped
-            each one: verified status and changed-line anchor,
+            each one: anchor, whether it is verified or still reported,
             the defect, the realistic trigger, the smallest fix direction
 Excluded    what the bar dropped, named, so the filter is auditable
 Cleared     from the cleared record, so nobody re-derives it
 ```
 
-Two findings at one priority can need entirely different responses, which is why the grouping is by action. Only verified findings belong in the handoff. Keep unverified candidates private; describe a missing necessary check under limits and mark the review incomplete when it blocks verification or coverage.
+Two findings at one priority can need entirely different responses, which is why the grouping is by action. Mark every finding verified or reported, because a reader who cannot tell will either trust an unverified claim or re-check a settled one.
 
 ## Tighten Before Return
 
-Run this pass last, after the final recheck and right before returning the response. It applies to every output comment, findings report, and handoff.
+Run this pass last, after the final recheck and right before returning the response. It applies to every output comment and to the handoff.
 
 1. Split each draft into its claims, one sentence at a time.
 2. Mark each claim that restates another claim in the same draft or in a sibling draft. An explanation followed by an example is usually one claim twice, so keep the example, because it shows the point by itself.

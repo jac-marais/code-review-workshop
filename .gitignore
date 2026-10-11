@@ -2,12 +2,6 @@
 # stay under the ignored repo-local review-work root.
 review-work/
 
-# Legacy case-specific review artifacts remain private.
-.notes/
-
-# Retired raw source copies are not release inputs.
-library/raw/
-
 # Legacy delivery records must not enter version control.
 delivery/
 

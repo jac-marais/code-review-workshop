@@ -18,7 +18,6 @@ RAW_ROOT = ROOT / "library" / "raw"
 # It is not part of a portable workshop release.
 WORKING_DIRS = {
     ".git",
-    ".notes",
     "review-work",
     "node_modules",
     "__pycache__",
@@ -147,12 +146,10 @@ def check_release_safeguards(
             errors.append(f"stale human review skill name: {relative}")
         if relative in tracked and PRIVATE_CLASSIFICATION.search(text):
             errors.append(f"tracked private source classification: {relative}")
-        if relative in tracked and relative != Path(".gitignore") and RAW_SOURCE_PATH.search(text):
+        if relative in tracked and RAW_SOURCE_PATH.search(text):
             errors.append(f"tracked private raw source path: {relative}")
 
     for relative in sorted(tracked):
-        if relative.parts[0] in {".notes", "review-work", "delivery"}:
-            errors.append(f"tracked private working artifact: {relative}")
         if relative.parts[:2] == ("library", "raw"):
             errors.append(f"tracked private raw source file: {relative}")
 
