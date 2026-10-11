@@ -1,6 +1,6 @@
 # TypeScript Single Pull Request Trial Contract
 
-Status: design accepted, fixture pending
+Status: design accepted; fixture builder present; scored end-to-end trials pending
 Evaluation role: public representative conformance and regression trial for the first workbench
 
 ## Natural Request

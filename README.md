@@ -7,6 +7,7 @@ A harness-neutral workshop for reviewing local code changes, single pull request
 - Research maturity: `surveyed`, with the first workbench dependencies `distilled`.
 - Product maturity: `bounded`.
 - Review skills are repo-local.
+- The [single-change milestone](research/milestones/single-change-review.md) records the acceptance criteria and remaining trial evidence.
 
 ## Operable Success
 
@@ -30,6 +31,8 @@ The agent inspects the change in repository context, runs useful checks, uses in
 | [Guided human review](.agents/skills/pr-storybook/SKILL.md) | Help a human understand and inspect one large change through a guided HTML review. |
 | [Robustness review](.agents/skills/review-robust-rules/SKILL.md) | Evaluate a change against the Rules for Robust Software. |
 | [Security lens review](.agents/skills/security-lens-review/SKILL.md) | Run a multi-lens security review of a change or codebase. |
+
+For one combined findings report, request the automatic review's [optional gist review mode](.agents/skills/review-code-change/SKILL.md#optional-gist-review-reports). It uses the local protocols and keeps all five workbenches, verification, and deduplication.
 
 ## Scope Limits
 

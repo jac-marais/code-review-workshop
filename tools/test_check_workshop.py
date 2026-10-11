@@ -44,6 +44,9 @@ class WorkingOutputTests(unittest.TestCase):
     def test_skips_review_artifacts(self) -> None:
         self.assertTrue(is_working_output(ROOT / "review-work" / "pr-reviews" / "report.md"))
 
+    def test_skips_legacy_review_artifacts(self) -> None:
+        self.assertTrue(is_working_output(ROOT / ".notes" / "pr-reviews" / "report.md"))
+
     def test_keeps_authored_text(self) -> None:
         self.assertFalse(is_working_output(ROOT / "library" / "glossary.md"))
 
@@ -67,11 +70,19 @@ class ReleaseSafeguardTests(unittest.TestCase):
                 "README.md": "portable text\n",
                 ".git/config": "/" + "Users/reviewer/private\n",
                 "review-work/report.md": "/" + "Users/reviewer/private\n",
+                ".notes/report.md": "/" + "Users/reviewer/private\n",
                 "node_modules/package.md": "/" + "Users/reviewer/private\n",
                 "cache/report.md": "/" + "Users/reviewer/private\n",
             }
         )
         self.assertEqual(errors, [])
+
+    def test_rejects_tracked_private_artifacts_even_in_ignored_directories(self) -> None:
+        for directory in (".notes", "review-work", "delivery"):
+            with self.subTest(directory=directory):
+                name = directory + "/report.md"
+                errors = self.check({name: "case-specific report\n"}, tracked={name})
+                self.assertTrue(any("tracked private working artifact" in error for error in errors))
 
     def test_rejects_absolute_personal_path_in_portable_text(self) -> None:
         errors = self.check({"README.md": "See /" + "Users/reviewer/project.\n"})
@@ -131,6 +142,13 @@ class ReleaseSafeguardTests(unittest.TestCase):
         )
         self.assertTrue(any("tracked private raw source path" in error for error in errors))
         self.assertTrue(any("tracked private raw source file" in error for error in errors))
+
+    def test_allows_ignore_rules_for_retired_private_paths(self) -> None:
+        errors = self.check(
+            {".gitignore": "library/" + "raw/\ndeliv" + "ery/\n.notes/\nreview-work/\n"},
+            tracked={".gitignore"},
+        )
+        self.assertEqual(errors, [])
 
 
 class HarnessDiscoverabilityTests(unittest.TestCase):

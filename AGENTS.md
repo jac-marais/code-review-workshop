@@ -15,10 +15,12 @@ Review proposed code changes deeply, return a small set of verified and deduplic
 ## Routing
 
 - For an automatic review of one working-tree change, revision range, branch, or pull request, use [`.agents/skills/review-code-change/SKILL.md`](.agents/skills/review-code-change/SKILL.md).
+- For that full review as a combined findings report, including legacy gist review requests, use its optional report mode. Standalone robustness and security requests use the focused skills below.
 - To help a human understand and inspect one large change through a guided HTML review, use [`.agents/skills/pr-storybook/SKILL.md`](.agents/skills/pr-storybook/SKILL.md).
 - For a robustness review, use [`.agents/skills/review-robust-rules/SKILL.md`](.agents/skills/review-robust-rules/SKILL.md).
 - For a security lens review, use [`.agents/skills/security-lens-review/SKILL.md`](.agents/skills/security-lens-review/SKILL.md).
 - All review skills are repo-local.
+- Two or more linked pull requests need a stack workflow, which is not yet mounted. Do not flatten the stack into a single-change review or claim stack-placement coverage.
 - Requests to implement fixes are outside the review-only skills. Ask for or follow separate implementation authority.
 
 ## Local Review Work

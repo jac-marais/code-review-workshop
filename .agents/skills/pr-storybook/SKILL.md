@@ -1,6 +1,6 @@
 ---
 name: pr-storybook
-description: Create a frozen PR Storybook that helps a human understand and inspect one local code change, branch, revision range, or pull request. Use when a large diff needs a deep review, a layered explanation, complete review-unit coverage, and verified findings beside the related code. Do not use it to replace an automatic code review, edit target code, or post platform comments.
+description: "Create a frozen HTML storybook for a human to inspect one large code change or PR, with complete coverage and verified findings. Excludes automatic review and fixes."
 ---
 
 # PR Storybook
