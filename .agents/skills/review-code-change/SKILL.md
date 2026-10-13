@@ -36,7 +36,7 @@ Default to output only. Do not create comments or change platform state unless t
 ## Run The Workflow
 
 1. Capture the user-checkout status and the exact requested scope.
-2. Freeze repository identity, revisions, merge bases, platform facts, discussions, and commentable lines.
+2. Freeze repository identity, revisions, merge bases, platform facts, discussions, and commentable lines. For a pull request, set the main review chat title to `<author name>: <2–5-word change summary>`.
 3. Reconcile the platform file inventory with the complete local Git inventory.
 4. When the change exceeds one reviewer's context, cluster it by feature, size extra cluster passes to risk, write per-lane questions, and build one shared facts brief every workbench reads.
 5. Account for every changed file and inspect each complete logical change in bounded chunks.
