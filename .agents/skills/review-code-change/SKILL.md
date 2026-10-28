@@ -29,28 +29,28 @@ Accept exactly one of:
 - one branch relative to a base;
 - one pull request plus an optional matching local checkout.
 
-If the input contains two or more linked pull requests, stop and route to the stack workflow. If the user asks to implement fixes, keep this review read-only and treat implementation as a separate task.
+If a completed review of the same pull request or branch exists at an older head, review in delta mode as described in [`review-workflow.md`](references/review-workflow.md#7-re-review-after-new-commits).
 
-Default to output only. Do not create comments or change platform state unless the user separately and explicitly authorizes that exact action.
+If the input contains two or more linked pull requests, stop and route to the stack workflow. If the user asks to implement fixes, keep this review read-only and treat implementation as a separate task.
 
 ## Run The Workflow
 
 1. Capture the user-checkout status and the exact requested scope.
 2. Freeze repository identity, revisions, merge bases, platform facts, discussions, and commentable lines. For a pull request, set the main review chat title to `<author name>: <2–5-word change summary>`.
 3. Reconcile the platform file inventory with the complete local Git inventory.
-4. When the change exceeds one reviewer's context, cluster it by feature, size extra cluster passes to risk, write per-lane questions, and build one shared facts brief every workbench reads.
+4. When the change exceeds one reviewer's context, cluster it by feature, write per-lane questions, and build one shared facts brief every workbench reads. Settle open questions several lanes share before launch. Write the fan-out plan: five workbench agents, plus an extra cluster pass only for a named risk.
 5. Account for every changed file and inspect each complete logical change in bounded chunks.
 6. Build a change map for behavior, contracts, state, trust boundaries, dependencies, operations, tests, and user flows.
 7. Plan named validation questions. Send target commands only to the sandboxed validation executor.
 8. Run every mandatory workbench once over the complete frozen scope. A workbench can divide its lane by cluster. They must not see one another's candidate issues.
-9. Normalize each candidate issue, then reopen raw code and try to disprove it.
+9. Record each candidate in the candidate ledger, then reopen raw code and try to disprove it.
 10. Keep only issues introduced or materially worsened by the change.
 11. Deduplicate by counterfactual defect, first failing state, and minimal complete fix.
 12. Deduplicate against every existing discussion surface.
 13. Draft changed-line output comments, then recheck head, discussions, anchors, receipts, and user-checkout status.
 14. Last, tighten every draft so each claim appears once, as described in [`candidate-and-output.md`](references/candidate-and-output.md#tighten-before-return).
 
-When subagents are available, use separate read-only agents for independent workbenches. Give each the frozen scope facts, the shared facts brief, its cluster's per-lane questions, and no sibling output. When subagents are unavailable, run the workbenches in separate contexts and record the reduced independence as a limit.
+When subagents are available, use separate read-only agents for independent workbenches. Give each the context pack from [`review-workflow.md`](references/review-workflow.md#5-run-independent-workbenches) and no sibling output. When subagents are unavailable, run the workbenches in separate contexts and record the reduced independence as a limit.
 
 ## Mandatory Workbenches
 
@@ -64,7 +64,7 @@ Run every workbench. Routing may add specialists but cannot remove the baseline.
 
 Completion receipts name these workbenches by slug: `behavior-and-contracts`, `state-and-failure`, `security-and-privacy`, `design-and-maintainability`, `evidence-and-integration`. The validator matches those exact strings.
 
-Use a separate read-only coordinator for each linked protocol when subagents are available. Give it the shared facts brief, lane questions, relevant raw code, and validation evidence, but no sibling candidates. Each coordinator follows its linked skill's orchestrated workbench mode and does not create a separate summary, report, or output comment.
+Use a separate read-only coordinator for each linked protocol when subagents are available, and give it the same context pack. Each coordinator follows its linked skill's orchestrated workbench mode and does not create a separate summary, report, or output comment.
 
 The review lead owns the shared candidate ledger. It verifies and deduplicates all candidates, then writes the only final review response. A workbench does not post comments, modify files, or execute target commands.
 
@@ -88,10 +88,10 @@ Set `review_status: incomplete` when content or output is truncated, a mandatory
 
 Create the private result record under `review-work/pr-reviews/<review-id>/`. Keep every case-specific brief, report, snapshot, clone, worktree, and generated artifact under `review-work/`, outside the target checkout.
 
-The result record must conform to [`review-result.schema.json`](references/review-result.schema.json). Validate it with:
+The result record must conform to [`review-result.schema.json`](references/review-result.schema.json). Validate it with its candidate ledger:
 
 ```sh
-python3 .agents/skills/review-code-change/scripts/validate_review_result.py review-work/pr-reviews/<review-id>/review-result.json --snapshot review-work/pr-reviews/<review-id>/review-snapshot.json
+python3 .agents/skills/review-code-change/scripts/validate_review_result.py review-work/pr-reviews/<review-id>/review-result.json --snapshot review-work/pr-reviews/<review-id>/review-snapshot.json --ledger review-work/pr-reviews/<review-id>/candidate-ledger.jsonl
 ```
 
 Return the review response, not the private candidate ledger:

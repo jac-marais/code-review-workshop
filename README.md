@@ -20,7 +20,6 @@ The agent inspects the change in repository context, runs useful checks, uses in
 
 1. Read [`AGENTS.md`](AGENTS.md) for workshop authority and routing.
 2. Use the [`source map`](library/source-map.md), [`glossary`](library/glossary.md), and [`source-use policy`](library/source-use-policy.md) for accepted knowledge.
-3. Use the ignored repo-local `review-work/` root for case-specific reviews, PR storybooks, generated artifacts, clones, and worktrees.
 
 ## Review Workflows
 

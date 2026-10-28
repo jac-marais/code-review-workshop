@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import unittest
 
-from validate_review_result import WORKBENCHES, validate
+from validate_review_result import WORKBENCHES, validate, validate_ledger
 
 
 def valid_result() -> dict:
@@ -120,6 +120,87 @@ class ValidateReviewResultTests(unittest.TestCase):
             }
         ]
         self.assertTrue(any("duplicate issue_id" in item for item in validate(result, SNAPSHOT)))
+
+
+def valid_ledger() -> list[dict]:
+    return [
+        {
+            "candidate_id": "state-1",
+            "workbench": "state-and-failure",
+            "title": "Cache key omits the tenant",
+            "disposition": "kept",
+            "issue_id": "cache-tenant-boundary",
+            "reason": "Reproduced a cross-tenant read.",
+        },
+        {
+            "candidate_id": "security-1",
+            "workbench": "security-and-privacy",
+            "title": "Tenant missing from cache key",
+            "disposition": "merged",
+            "issue_id": "cache-tenant-boundary",
+            "reason": "Same defect and fix as state-1.",
+        },
+        {
+            "candidate_id": "design-1",
+            "workbench": "design-and-maintainability",
+            "title": "Helper name is vague",
+            "disposition": "below_bar",
+            "reason": "Style preference with no concrete consequence.",
+        },
+    ]
+
+
+class ValidateCandidateLedgerTests(unittest.TestCase):
+    def test_accepts_kept_merged_and_dropped_candidates(self) -> None:
+        self.assertEqual(validate_ledger(valid_ledger(), valid_result()), [])
+
+    def test_rejects_output_comment_without_ledger_candidate(self) -> None:
+        ledger = [record for record in valid_ledger() if record["disposition"] == "below_bar"]
+        self.assertTrue(
+            any("no kept or merged ledger candidate" in item for item in validate_ledger(ledger, valid_result()))
+        )
+
+    def test_rejects_kept_candidate_naming_unknown_comment(self) -> None:
+        ledger = valid_ledger()
+        ledger[0]["issue_id"] = "missing-comment"
+        self.assertTrue(
+            any("does not name an output comment" in item for item in validate_ledger(ledger, valid_result()))
+        )
+
+    def test_rejects_unknown_disposition_and_duplicate_id(self) -> None:
+        ledger = valid_ledger()
+        ledger[2]["disposition"] = "ignored"
+        ledger[1]["candidate_id"] = "state-1"
+        errors = validate_ledger(ledger, valid_result())
+        self.assertTrue(any("disposition is invalid" in item for item in errors))
+        self.assertTrue(any("candidate_id is duplicated" in item for item in errors))
+
+    def test_requires_existing_discussion_candidate_for_suppression(self) -> None:
+        result = valid_result()
+        result["suppressions"] = [
+            {
+                "issue_id": "existing-zero-balance",
+                "path": "source.ts",
+                "side": "RIGHT",
+                "line": 3,
+                "existing_thread_id": "thread-1",
+                "reason": "An unresolved thread already reports this issue.",
+            }
+        ]
+        self.assertTrue(
+            any("no existing_discussion ledger candidate" in item for item in validate_ledger(valid_ledger(), result))
+        )
+        ledger = valid_ledger() + [
+            {
+                "candidate_id": "behavior-1",
+                "workbench": "behavior-and-contracts",
+                "title": "Zero balance renders as empty",
+                "disposition": "existing_discussion",
+                "issue_id": "existing-zero-balance",
+                "reason": "Thread 1 already reports it.",
+            }
+        ]
+        self.assertEqual(validate_ledger(ledger, result), [])
 
 
 if __name__ == "__main__":

@@ -14,7 +14,14 @@ Use this for depth on a security surface or a high-stakes change, where a single
 Use this mode when [`review-code-change`](../review-code-change/SKILL.md) invokes this skill as the `security-and-privacy` workbench.
 
 - Use the scope and evidence that the review lead supplies. Do not run a target command or write separate review artifacts.
-- Run the existing five-lens procedure, then return candidates in the shape from [`candidate-and-output.md`](../review-code-change/references/candidate-and-output.md), plus cleared behavior, limits, evidence, and one `security-and-privacy` completion receipt.
+- By default, run one combined pass: read all five lens files and apply each lens's question, refusals, and focus in a single agent. In the archive, five parallel lenses converged on one defect in one review and found none across 242 files in another, so the default spends one agent, not five.
+- Escalate to the five parallel lens subagents of Phase 2 when any of these holds:
+  - the change touches authentication, authorization, sessions, tenant or data isolation, secrets, signing or cryptography, or permission checks;
+  - untrusted input reaches a command, query, template, file path, deserializer, or outbound network request;
+  - the change adds or upgrades a dependency, build step, CI permission, or container image;
+  - the combined pass reports a P0 or P1 candidate, or a candidate it cannot settle with confidence.
+- Record which mode ran, and for an escalation, the trigger. The lead owns the changed-file inventory, so no lens re-lists the changed files.
+- Then return candidates in the shape from [`candidate-and-output.md`](../review-code-change/references/candidate-and-output.md), plus cleared behavior, limits, evidence, and one `security-and-privacy` completion receipt.
 - The review lead owns final verification, deduplication, and user-facing output. Zero candidates is valid.
 
 The remaining workflow applies only to a direct security review.

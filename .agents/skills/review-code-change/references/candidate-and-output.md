@@ -18,7 +18,9 @@ Normalize every workbench claim into:
 
 Zero candidates is valid.
 
-Robust Rules Review and Security Lens Review use the same candidate shape as every other workbench. They do not create separate summaries, reports, or output comments.
+Return candidates compactly. Do not restate facts the shared facts brief already holds; cite the brief instead.
+
+Robust Rules Review and Security Lens Review use the same candidate shape as every other workbench.
 
 ## Verification
 
@@ -35,6 +37,25 @@ The review lead returns to raw code for every candidate issue:
 Agreement raises confidence only when workbenches add different evidence. Several workbenches reaching one conclusion from the same starting scope is one observation, not several.
 
 When verification contradicts a finding you already delivered, lead with the correction before any new finding. Someone may be part-way through fixing it.
+
+## Candidate Ledger
+
+Write every candidate to `review-work/pr-reviews/<review-id>/candidate-ledger.jsonl`, one JSON object per line, including candidates the lead raises itself (`workbench: "lead"`). Without it, nobody can later tell how many candidates verification dropped, or why.
+
+```json
+{"candidate_id": "state-1", "workbench": "state-and-failure", "title": "Cache key omits the tenant", "disposition": "kept", "issue_id": "cache-tenant-boundary", "reason": "Reproduced a cross-tenant read."}
+```
+
+Use exactly one disposition:
+
+- `kept`: it became the output comment named by `issue_id`;
+- `merged`: a duplicate of the kept candidate with the same `issue_id`;
+- `existing_discussion`: it became the suppression named by `issue_id`;
+- `disproved`: verification found it false;
+- `not_introduced`: real, but the change did not introduce or worsen it;
+- `below_bar`: real but fails the output bar, such as style, vague hardening, or no concrete consequence.
+
+The validator checks the dispositions and that every output comment and suppression traces to a candidate.
 
 ## Deduplication
 
@@ -68,7 +89,7 @@ Keep it to behavior someone would reasonably suspect. A list of everything that 
 
 ## Output Comment
 
-The review lead writes output only after it has combined every workbench result into one candidate ledger, verified the retained candidates, and completed global deduplication. The final response does not separate findings by discovery protocol unless that provenance helps explain distinct evidence.
+The review lead writes output only after it has recorded every workbench result in the candidate ledger, verified the retained candidates, and completed global deduplication. The final response does not separate findings by discovery protocol unless that provenance helps explain distinct evidence.
 
 Use one causal changed-line anchor. Never attach a real issue to unrelated changed code.
 

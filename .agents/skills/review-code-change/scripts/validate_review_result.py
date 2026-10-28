@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate a review result and optional changed-line snapshot."""
+"""Validate a review result, an optional changed-line snapshot, and an optional candidate ledger."""
 
 from __future__ import annotations
 
@@ -28,6 +28,15 @@ WORKBENCHES = {
     "design-and-maintainability",
     "evidence-and-integration",
 }
+DISPOSITIONS = {
+    "kept",
+    "merged",
+    "existing_discussion",
+    "disproved",
+    "not_introduced",
+    "below_bar",
+}
+DISPOSITIONS_WITH_ISSUE = {"kept", "merged", "existing_discussion"}
 
 
 def is_string(value: Any) -> bool:
@@ -219,22 +228,72 @@ def validate(data: Any, snapshot: Any | None = None) -> list[str]:
     return errors
 
 
+def validate_ledger(records: list[Any], result: dict) -> list[str]:
+    errors: list[str] = []
+    comment_ids = {c.get("issue_id") for c in result.get("output_comments", []) if isinstance(c, dict)}
+    suppression_ids = {s.get("issue_id") for s in result.get("suppressions", []) if isinstance(s, dict)}
+    candidate_ids: set[str] = set()
+    kept_ids: set[str] = set()
+    discussion_ids: set[str] = set()
+    for index, record in enumerate(records):
+        prefix = f"candidate_ledger[{index}]"
+        if not isinstance(record, dict):
+            errors.append(f"{prefix} must be an object")
+            continue
+        for key in ("candidate_id", "workbench", "title", "reason"):
+            if not is_string(record.get(key)):
+                errors.append(f"{prefix}.{key} must be a non-empty string")
+        candidate_id = record.get("candidate_id")
+        if candidate_id in candidate_ids:
+            errors.append(f"{prefix}.candidate_id is duplicated: {candidate_id}")
+        candidate_ids.add(candidate_id)
+        disposition = record.get("disposition")
+        if disposition not in DISPOSITIONS:
+            errors.append(f"{prefix}.disposition is invalid: {disposition}")
+            continue
+        issue_id = record.get("issue_id")
+        if disposition not in DISPOSITIONS_WITH_ISSUE:
+            continue
+        if disposition == "existing_discussion":
+            if issue_id not in suppression_ids:
+                errors.append(f"{prefix}.issue_id does not name a suppression: {issue_id}")
+            discussion_ids.add(issue_id)
+        else:
+            if issue_id not in comment_ids:
+                errors.append(f"{prefix}.issue_id does not name an output comment: {issue_id}")
+            kept_ids.add(issue_id)
+    for issue_id in sorted(comment_ids - kept_ids, key=str):
+        errors.append(f"output comment has no kept or merged ledger candidate: {issue_id}")
+    for issue_id in sorted(suppression_ids - discussion_ids, key=str):
+        errors.append(f"suppression has no existing_discussion ledger candidate: {issue_id}")
+    return errors
+
+
 def load(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def load_jsonl(path: Path) -> list[Any]:
+    lines = path.read_text(encoding="utf-8").splitlines()
+    return [json.loads(line) for line in lines if line.strip()]
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("result", type=Path)
     parser.add_argument("--snapshot", type=Path)
+    parser.add_argument("--ledger", type=Path, help="candidate-ledger.jsonl for the same review")
     args = parser.parse_args()
     try:
         result = load(args.result)
         snapshot = load(args.snapshot) if args.snapshot else None
+        ledger = load_jsonl(args.ledger) if args.ledger else None
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         print(str(exc), file=sys.stderr)
         return 1
     errors = validate(result, snapshot)
+    if ledger is not None and isinstance(result, dict):
+        errors.extend(validate_ledger(ledger, result))
     if errors:
         for error in errors:
             print(error, file=sys.stderr)

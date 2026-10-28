@@ -1,6 +1,6 @@
 # Workbench Map
 
-Run every baseline workbench for every change. A router may add specialists but cannot remove the baseline.
+Run every baseline workbench once for every change. A router may add specialists but cannot remove the baseline. Archive evidence shows each baseline workbench contributes kept findings no other finds, so do not merge them; cap the number of agents instead ([batch 002](../../research/batches/002-review-efficiency.md)).
 
 | Workbench | Failure model | Required evidence |
 | --- | --- | --- |
