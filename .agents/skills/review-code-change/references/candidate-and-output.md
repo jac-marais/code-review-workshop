@@ -87,7 +87,7 @@ Comment on code, not the author. Offer an exact patch only when repository evide
 
 Output comments suit a reviewer reading one issue at a time. Someone about to do the work needs one document instead, ordered by what they do next. Produce it as a single fenced block they can copy whole.
 
-Ask for the delivery bar before filtering, because it is the user's call and it changes what belongs. State the bar you applied and how many candidates it dropped. Silent filtering reads as completeness.
+Apply the delivery bar in [`SKILL.md`](../SKILL.md). State the bar you applied and how many candidates it dropped. Silent filtering reads as completeness.
 
 ```
 Header      repository, branch, base and head, path convention

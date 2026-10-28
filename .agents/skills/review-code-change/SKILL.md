@@ -102,6 +102,6 @@ Return the review response, not the private candidate ledger:
 - behavior investigated and cleared, so the next reader stops rather than re-deriving it;
 - material limits when they affect confidence or completeness.
 
-Ask which delivery bar applies before filtering. Under release pressure a user may want only what blocks the merge, and that is their decision, not yours. Whatever bar you apply, name it and name what it dropped.
+Deliver every verified finding, with its severity, without asking first. Apply a narrower bar, such as merge blockers only, only when the user asks for one, and then name what it dropped.
 
 Use `delivery_state: draft` unless posting was separately authorized. Offer fixes in the comments. Never apply them.
